@@ -250,7 +250,7 @@ class LookupModule(LookupBase):
                         if bool(performGet):
                             display.v("Adding username: %s, path: %s" % (idusername, idpath))
                             r = self.get_password(pleasant_host=term, pleasant_id=id, _at=access_token)
-                            ret.append({"username": idusername, "password": r.json(), "path": idpath})
+                            ret.append({"username": to_text(idusername), "password": to_text(r.json()), "path": to_text(idpath)})
                 elif pitem.status_code == 401 or pitem.status_code == 403:
                     # Not authenticated/not authorized
                     response.raise_for_status()
