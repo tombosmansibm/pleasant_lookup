@@ -1,12 +1,9 @@
 # tombosmansibm.pleasant_lookup collection
 
-
 # Overview
-
 This is a Ansible collection that contains a lookup plugin to retrieve passwords from Pleasant Solutions.
 
 # Requirements
-
 ## Operating systems
 
 This role will work on the following operating systems:
@@ -21,7 +18,6 @@ Please send Pull Requests or suggestions when you want to use this role for othe
 ## Ansible 2.10 and higher
 
 Tested on Ansible 2.10, but may work on lower versions.
-
 
 ## Pleasant versions
 

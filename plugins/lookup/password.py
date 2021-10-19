@@ -67,13 +67,13 @@ options:
 EXAMPLES = """
 
 - name: password
-  debug: msg="{{ lookup('pleasant', pleasant_host='https://pleasant.com:10001', username='bob', password='hunter2', pleasant_search='itemname') }}"
+  debug: msg="{{ lookup('tombosmansibm.pleasant_lookup.password', pleasant_host='https://pleasant.com:10001', username='bob', password='hunter2', pleasant_search='itemname') }}"
 
 # lookup example with search parameter and filter on username and path, with reference to the ca bundle of the system.
 - name: Lookup
   run_once: True
   debug:
-    msg: "{{ lookup('pleasant', pleasant_host='https://pleasant.com:10001', username='myuser', password='mypassword', pleasant_filter_path='Root/DEV/', 
+    msg: "{{ lookup('tombosmansibm.pleasant_lookup.password', pleasant_host='https://pleasant.com:10001', username='myuser', password='mypassword', pleasant_filter_path='Root/DEV/', 
        pleasant_filter_username='root', pleasant_search='root', verify='/etc/ssl/certs/ca-bundle.crt', timeout=2) }}"
   delegate_to: localhost
 
