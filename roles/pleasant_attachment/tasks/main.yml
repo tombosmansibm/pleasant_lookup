@@ -1,0 +1,91 @@
+---
+# tasks file
+- name: set user (use -e pleasant_user=your_user to set the user beforehand)
+  set_fact:
+    pleasant_user: "{{ lookup('env','USER')|replace('su','in',1) }}"
+  when:
+    - pleasant_user is not defined
+
+- name: "prompt for user {{ pleasant_user }}'s password"
+  tags: [always]
+  pause:
+   prompt: |
+    ********************************************************
+    Please enter the password for user ({{ pleasant_user }})
+    to access the Pleasant server at {{ pleasant_host }}
+    ********************************************************
+   echo: no
+  register: _result_pleasantuserpassword
+  when:
+    -  _result_pleasantuserpassword is not defined
+
+- name: Set pleasant password
+  tags: [always]
+  set_fact:
+    pleasant_password: "{{ _result_pleasantuserpassword.user_input }}"
+  when:
+    - _result_pleasantuserpassword is defined
+    - _result_pleasantuserpassword.user_input is defined
+    - _result_pleasantuserpassword.user_input|length > 0
+
+- name: Get access token from pleasant
+  uri:
+    url: "{{ pleasant_host }}/oauth2/token"
+    method: POST
+    body_format: form-urlencoded
+    body:
+      grant_type: password
+      username: "{{ pleasant_user }}"
+      password: "{{ pleasant_password }}"
+  register: _pleasant_at
+
+- name: "Search for item {{ pleasant_search_term }}"
+  uri:
+    url: "{{ pleasant_host }}/api/v5/rest/search"
+    method: POST
+    headers:
+      Content-Type: application/json
+      Authorization: "Bearer {{ _pleasant_at.json.access_token }}"
+    body_format: json
+    body:
+      Search: "{{ pleasant_search_term }}"
+  register: _pleasant_searchresult
+  when:
+    - pleasant_search_term is defined
+
+#Attachments
+- name: Get attachments
+  uri:
+    url: "{{ pleasant_host }}/api/v5/rest/entries/{{ _pleasant_searchresult.json.Credentials[0].Id }}/attachments"
+    method: GET
+    headers:
+      Content-Type: application/json
+      Authorization: "Bearer {{ _pleasant_at.json.access_token }}"
+  register: _pleasant_attachments
+  when:
+    - pleasant_search_term is defined
+    - _pleasant_searchresult is defined
+    - _pleasant_searchresult.json.Credentials is defined
+    - _pleasant_searchresult.json.Credentials[0] is defined
+
+# debug
+- name: debug attachments
+  debug:
+    verbosity: 2
+    msg:
+     - "{{ _pleasant_attachments|default('') }}"
+
+- name: extract attachments
+  copy:
+    dest: "{{ pleasant_export_dir }}/{{ pleasantItem.FileName }}"
+    content: "{{ pleasantItem.FileData|b64decode }}"
+  loop: "{{ _pleasant_attachments.json|default([]) }}"
+  loop_control:
+    label: "Extract {{ pleasant_export_dir }}/{{ pleasantItem.FileName|default('') }}"
+    loop_var: pleasantItem
+  when:
+    - _pleasant_attachments is defined
+    - _pleasant_attachments.json is defined
+    - pleasantItem.FileName is defined
+    - pleasantItem.FileData is defined
+    - (pleasant_attachment_filter is not defined) or (pleasantItem.FileName is search(pleasant_attachment_filter))
