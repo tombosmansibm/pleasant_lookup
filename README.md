@@ -1,34 +1,25 @@
-# Ansible Collection - tombosmansibm.pleasant_lookup
-
-## Python dependencies
-
-- requests
-
+# Pleasant Lookup
 ## Configuration parameters
-
-In ansible.cfg, you can add these settings:
-
+In ansible.cfg, you can add these global settings:
 ```
 [pleasant_lookup]
 ca_path = /etc/ssl/certs/ca-bundle.crt
 timeout = 15
 ```
-
-
 ## Parameters
 ### Required
 
-- pleasant_host: the host
-- username: username to authenticate to Pleasant
-- password: password to authenticate to Pleasant
-- pleasant_search: the search term to look for
+* pleasant_host: the pleasant host (https://pleasant.com:10001)
+* username: username to authenticate to Pleasant
+* password: password to authenticate to Pleasant
+* pleasant_search: the search term to look for
 
 ### Optional
 
-- pleasant_filter_username: only return search results for this username
-- pleasant_filter_path: only return results that begin with this path.  Should always begin with '/Root'
-- verify: set to False to disable SSL verification
-- timeout: defaults to 5
+* pleasant_filter_username: only return search results for this username
+* pleasant_filter_path: only return results that begin with this path.  Should always begin with '/Root'
+* verify: set to False to disable SSL verification
+* timeout: defaults to 5
 
 ## Examples
 
@@ -49,13 +40,9 @@ lookup example with search parameter and filter on username and path with refere
 ```
 The result is a list of items:
 ```json
-        [{
-            "password": "the password",
-            "path": "Root/Path/",
-            "username": "the username"
-        }] 
+ [{
+     "password": "the password",
+     "path": "Root/Path/",
+     "username": "the username"
+ }] 
 ```
-
-In the playbooks directory, there's an example.
-
-
