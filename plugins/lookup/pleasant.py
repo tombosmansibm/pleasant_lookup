@@ -2,6 +2,7 @@
 # (c) 2015, Brian Coca <bcoca@ansible.com>
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import (absolute_import, division, print_function)
+
 __metaclass__ = type
 
 DOCUMENTATION = """
@@ -98,6 +99,7 @@ from ansible.utils.display import Display
 
 display = Display()
 
+
 class LookupModule(LookupBase):
     def get_token(self, pleasant_host, _pusername, _ppassword):
         verify = self.get_option('verify')
@@ -106,30 +108,32 @@ class LookupModule(LookupBase):
             timeout = 5
         # get the access token from Pleasant
         try:
-          payload = {"grant_type": "password", "username": _pusername, "password": _ppassword}
-          #display.display("Payload: %s" % payload)
-          response = requests.request("POST", pleasant_host+"/oauth2/token",
-                                 data=payload, verify=verify, timeout=timeout)
-          if response.status_code != 200:
-              # error
-              display.display("Authentication failed getting an access token from Pleasant %s %s" % (response.status_code, response.reason))
-              response.raise_for_status()
+            payload = {"grant_type": "password", "username": _pusername, "password": _ppassword}
+            # display.display("Payload: %s" % payload)
+            response = requests.request("POST", pleasant_host + "/oauth2/token",
+                                        data=payload, verify=verify, timeout=timeout)
+            if response.status_code != 200:
+                # error
+                display.display("Authentication failed getting an access token from Pleasant %s %s" % (
+                    response.status_code, response.reason))
+                response.raise_for_status()
         except requests.ConnectionError as e:
-          raise AnsibleError("can't connect to host to get token %s" % to_native(e))
+            raise AnsibleError("can't connect to host to get token %s" % to_native(e))
         except requests.HTTPError as e:
-          raise AnsibleError("An HTTP Error occured %s" % to_native(e))
+            raise AnsibleError("An HTTP Error occured %s" % to_native(e))
         except requests.URLRequired as e:
-          raise AnsibleError("Invalid url %s" % to_native(e))
+            raise AnsibleError("Invalid url %s" % to_native(e))
         except requests.ConnectTimeout as e:
-          raise AnsibleError("The request timed out while trying to connect to the remote server.  Retry later. %s" % to_native(e))
+            raise AnsibleError(
+                "The request timed out while trying to connect to the remote server.  Retry later. %s" % to_native(e))
         except requests.Timeout as e:
-          raise AnsibleError("The request timed out %s" % to_native(e))
+            raise AnsibleError("The request timed out %s" % to_native(e))
         # parse the response
         try:
-          _at = response.json()
+            _at = response.json()
         except Exception as e:
-          ##e = sys.exc_info()[0]
-          raise AnsibleError("can't decode access token : %s , %s" % (_at, to_native(e)))
+            ##e = sys.exc_info()[0]
+            raise AnsibleError("can't decode access token : %s , %s" % (_at, to_native(e)))
         return _at
 
     def search(self, pleasant_host, pleasant_search, _at):
@@ -138,26 +142,28 @@ class LookupModule(LookupBase):
         verify = self.get_option('verify')
         timeout = self.get_option('timeout')
         if not timeout:
-          timeout = 5
+            timeout = 5
         try:
-           response = requests.request("POST", pleasant_host + "/api/v5/rest/search", headers=headers,
-                                    json=payload, verify=verify, timeout=timeout)
-           if response.status_code != 200:
-               # error
-               display.display("Search failed for this item: %s (%s %s)" % (pleasant_search, response.status_code, response.reason))
-               response.raise_for_status()
+            response = requests.request("POST", pleasant_host + "/api/v5/rest/search", headers=headers,
+                                        json=payload, verify=verify, timeout=timeout)
+            if response.status_code != 200:
+                # error
+                display.display("Search failed for this item: %s (%s %s)" % (
+                    pleasant_search, response.status_code, response.reason))
+                response.raise_for_status()
         except requests.ConnectionError as e:
-          raise AnsibleError("can't connect to host to get token %s" % to_native(e))
+            raise AnsibleError("can't connect to host to get token %s" % to_native(e))
         except requests.HTTPError as e:
-          raise AnsibleError("An HTTP Error occured %s" % to_native(e))
+            raise AnsibleError("An HTTP Error occured %s" % to_native(e))
         except requests.URLRequired as e:
-          raise AnsibleError("Invalid url %s" % to_native(e))
+            raise AnsibleError("Invalid url %s" % to_native(e))
         except requests.ConnectTimeout as e:
-          raise AnsibleError("The request timed out while trying to connect to the remote server.  Retry later. %s" % to_native(e))
+            raise AnsibleError(
+                "The request timed out while trying to connect to the remote server.  Retry later. %s" % to_native(e))
         except requests.Timeout as e:
-          raise AnsibleError("The request timed out %s" % to_native(e))
+            raise AnsibleError("The request timed out %s" % to_native(e))
         except Exception as e:
-           raise AnsibleError("Failed to execute search %s - error %s" % (pleasant_search, to_native(e)))
+            raise AnsibleError("Failed to execute search %s - error %s" % (pleasant_search, to_native(e)))
         return response
 
     def get_password(self, pleasant_host, pleasant_id, _at):
@@ -170,27 +176,28 @@ class LookupModule(LookupBase):
         verify = self.get_option('verify')
         timeout = self.get_option('timeout')
         if not timeout:
-          timeout = 5
+            timeout = 5
         try:
-           response = requests.request("GET", pleasant_host + "/api/v5/rest/entries/" + pleasant_id + "/password", headers=headers,
-                                    verify=verify, timeout=timeout)
-           if response.status_code != 200:
-               # error
-               response.raise_for_status()
+            response = requests.request("GET", pleasant_host + "/api/v5/rest/entries/" + pleasant_id + "/password",
+                                        headers=headers,
+                                        verify=verify, timeout=timeout)
+            if response.status_code != 200:
+                # error
+                response.raise_for_status()
         except requests.ConnectionError as e:
-          raise AnsibleError("can't connect to host to get token %s" % to_native(e))
+            raise AnsibleError("can't connect to host to get token %s" % to_native(e))
         except requests.HTTPError as e:
-          raise AnsibleError("An HTTP Error occured %s" % to_native(e))
+            raise AnsibleError("An HTTP Error occured %s" % to_native(e))
         except requests.URLRequired as e:
-          raise AnsibleError("Invalid url %s" % to_native(e))
+            raise AnsibleError("Invalid url %s" % to_native(e))
         except requests.ConnectTimeout as e:
-          raise AnsibleError("The request timed out while trying to connect to the remote server.  Retry later. %s" % to_native(e))
+            raise AnsibleError(
+                "The request timed out while trying to connect to the remote server.  Retry later. %s" % to_native(e))
         except requests.Timeout as e:
-          raise AnsibleError("The request timed out %s" % to_native(e))
+            raise AnsibleError("The request timed out %s" % to_native(e))
         except Exception as e:
-           raise AnsibleError("Failed to get password %s - error %s" % (pleasant_id, to_native(e)))
+            raise AnsibleError("Failed to get password %s - error %s" % (pleasant_id, to_native(e)))
         return response
-
 
     def run(self, terms, variables=None, **kwargs):
 
@@ -201,13 +208,13 @@ class LookupModule(LookupBase):
         # get access token
         for term in terms:
             display.vvv("Host: %s" % term)
-            username=self.get_option('username')
-            password=self.get_option('password')
-            pleasant_search=self.get_option('pleasant_search')
-            pleasant_filter_path=self.get_option('pleasant_filter_path')
-            pleasant_filter_username=self.get_option('pleasant_filter_username')
+            username = self.get_option('username')
+            password = self.get_option('password')
+            pleasant_search = self.get_option('pleasant_search')
+            pleasant_filter_path = self.get_option('pleasant_filter_path')
+            pleasant_filter_username = self.get_option('pleasant_filter_username')
             display.vvv("Filter path is %s" % pleasant_filter_path)
-            #raise AnsibleError("term %s, username %s, password %s" % (term, username, password))
+            # raise AnsibleError("term %s, username %s, password %s" % (term, username, password))
             at = self.get_token(term, username, password)
             try:
                 access_token = at.get('access_token', 'default')
@@ -215,7 +222,7 @@ class LookupModule(LookupBase):
                 # perform search
                 pitem = self.search(pleasant_host=term, pleasant_search=pleasant_search, _at=access_token)
                 if pitem.status_code == 200:
-                    #continue
+                    # continue
                     # retrieve item
                     itemjson = pitem.json()
                     display.vvvvvv(itemjson)
@@ -245,20 +252,23 @@ class LookupModule(LookupBase):
                             r = self.get_password(pleasant_host=term, pleasant_id=id, _at=access_token)
                             ret.append({"username": idusername, "password": r.json(), "path": idpath})
                 elif pitem.status_code == 401 or pitem.status_code == 403:
-                    #Not authenticated/not authorized
+                    # Not authenticated/not authorized
                     response.raise_for_status()
                 else:
-                    raise AnsibleError("Did not find %s (HTTP ERROR %s) on %s" % (pleasant_search, pitem.status_code, terms))
+                    raise AnsibleError(
+                        "Did not find %s (HTTP ERROR %s) on %s" % (pleasant_search, pitem.status_code, terms))
             except requests.ConnectionError as e:
-              raise AnsibleError("Can't connect to host to get token %s" % to_native(e))
+                raise AnsibleError("Can't connect to host to get token %s" % to_native(e))
             except requests.HTTPError as e:
-              raise AnsibleError("An HTTP Error occured %s" % to_native(e))
+                raise AnsibleError("An HTTP Error occured %s" % to_native(e))
             except requests.URLRequired as e:
-              raise AnsibleError("Invalid url : %s" % to_native(e))
+                raise AnsibleError("Invalid url : %s" % to_native(e))
             except requests.ConnectTimeout as e:
-              raise AnsibleError("The request timed out while trying to connect to the remote server.  Retry later: %s" % to_native(e))
+                raise AnsibleError(
+                    "The request timed out while trying to connect to the remote server.  Retry later: %s" % to_native(
+                        e))
             except requests.Timeout as e:
-              raise AnsibleError("The request timed out : %s" % to_native(e))
+                raise AnsibleError("The request timed out : %s" % to_native(e))
             except Exception as e:
-              raise AnsibleError("No search result %s" % to_native(e))
+                raise AnsibleError("No search result %s" % to_native(e))
         return ret

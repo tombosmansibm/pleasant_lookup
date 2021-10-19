@@ -8,9 +8,12 @@
 
 In ansible.cfg, you can add these settings:
 
+```
 [pleasant_lookup]
 ca_path = /etc/ssl/certs/ca-bundle.crt
 timeout = 15
+```
+
 
 ## Parameters
 ### Required
