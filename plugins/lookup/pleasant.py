@@ -9,7 +9,8 @@ DOCUMENTATION = """
 name: pleasant
 author: Tom Bosmans
 version_added: "2.10"
-short_description: lookup passwords in Pleasant Password server.  This is using Python Requests https://docs.python-requests.org/en/latest/api/
+short_description: lookup passwords in Pleasant Password server.  
+   This is using Python Requests https://docs.python-requests.org/en/latest/api/
 description:
     - Returns the content of the URL requested to be used as data in play.
 options:
@@ -72,15 +73,16 @@ EXAMPLES = """
 - name: Lookup
   run_once: True
   debug:
-    msg: "{{ lookup('pleasant', pleasant_host='https://pleasant.com:10001', username='myuser', password='mypassword', pleasant_filter_path='Root/DEV/', pleasant_filter_username='root', pleasant_search='root', verify='/etc/ssl/certs/ca-bundle.crt', timeout=2) }}"
+    msg: "{{ lookup('pleasant', pleasant_host='https://pleasant.com:10001', username='myuser', password='mypassword', pleasant_filter_path='Root/DEV/', 
+       pleasant_filter_username='root', pleasant_search='root', verify='/etc/ssl/certs/ca-bundle.crt', timeout=2) }}"
   delegate_to: localhost
 
-The result is a list of items: 
+The result is a list of items:
         [{
             "password": "the password",
             "path": "Root/Path/",
             "username": "the username"
-        }] 
+        }]
 
 """
 
@@ -132,7 +134,6 @@ class LookupModule(LookupBase):
         try:
             _at = response.json()
         except Exception as e:
-            ##e = sys.exc_info()[0]
             raise AnsibleError("can't decode access token : %s , %s" % (_at, to_native(e)))
         return _at
 
@@ -253,7 +254,7 @@ class LookupModule(LookupBase):
                             ret.append({"username": to_text(idusername), "password": to_text(r.json()), "path": to_text(idpath)})
                 elif pitem.status_code == 401 or pitem.status_code == 403:
                     # Not authenticated/not authorized
-                    response.raise_for_status()
+                    pitem.raise_for_status()
                 else:
                     raise AnsibleError(
                         "Did not find %s (HTTP ERROR %s) on %s" % (pleasant_search, pitem.status_code, terms))
