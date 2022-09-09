@@ -62,6 +62,7 @@ timeout = 15
 
 # Author Information
 
-Please send suggestion or pull requests to make this role better. Also let us know if you encounter any issues installing or using this role.
+Please send suggestion or pull requests to make this role better. 
+Also let us know if you encounter any issues installing or using this role.
 
 
