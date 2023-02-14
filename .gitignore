@@ -1,0 +1,12 @@
+# .gitignore
+/.idea
+/.vscode
+.vscode/**
+.idea/**
+.history/
+.DS_Store
+*/.DS_Store
+*.retry
+*.pyc
+*.bak
+.vscode
