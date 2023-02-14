@@ -16,11 +16,8 @@ options:
   _terms:
     description: Pleasant password server url.  This will be removed in a future version.
   pleasant_host:
-    description: 
-      - Pleasant password server url.
-      - Use instead of the positional argument.
+    description: Pleasant password server url. Use instead of the positional argument.
     type: string
-    required: True
     version_added: "1.1.0"
     vars:
       - name: pleasant_host
@@ -30,7 +27,7 @@ options:
       - section: pleasant_lookup
         key: host
   pleasant_api_version:
-   description: Version of the api.  Only v5 or v6.
+    description: Version of the api.  Only v5 or v6.
     type: string
     default: "v5"
     choices: ['v5', 'v6', 'v7']
