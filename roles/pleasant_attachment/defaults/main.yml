@@ -5,3 +5,4 @@ pleasant_export_dir: "{{ playbook_dir }}"
 #entry to look for
 #pleasant_search_term:
 #pleasant_attachment_filter
+pleasant_api_version: "v5"

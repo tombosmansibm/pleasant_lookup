@@ -41,7 +41,7 @@
 
 - name: "Search for item {{ pleasant_search_term }}"
   uri:
-    url: "{{ pleasant_host }}/api/v5/rest/search"
+    url: "{{ pleasant_host }}/api/{{ pleasant_api_version }}/rest/search"
     method: POST
     headers:
       Content-Type: application/json
@@ -56,7 +56,7 @@
 #Attachments
 - name: Get attachments
   uri:
-    url: "{{ pleasant_host }}/api/v5/rest/entries/{{ _pleasant_searchresult.json.Credentials[0].Id }}/attachments"
+    url: "{{ pleasant_host }}/api/{{ pleasant_api_version }}/rest/entries/{{ _pleasant_searchresult.json.Credentials[0].Id }}/attachments"
     method: GET
     headers:
       Content-Type: application/json
