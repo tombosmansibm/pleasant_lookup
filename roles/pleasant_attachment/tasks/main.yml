@@ -9,15 +9,15 @@
 - name: "prompt for user {{ pleasant_user }}'s password"
   tags: [always]
   pause:
-   prompt: |
-    ********************************************************
-    Please enter the password for user ({{ pleasant_user }})
-    to access the Pleasant server at {{ pleasant_host }}
-    ********************************************************
-   echo: no
+    prompt: |
+      ********************************************************
+      Please enter the password for user ({{ pleasant_user }})
+      to access the Pleasant server at {{ pleasant_host }}
+      ********************************************************
+    echo: no
   register: _result_pleasantuserpassword
   when:
-    -  _result_pleasantuserpassword is not defined
+    - _result_pleasantuserpassword is not defined
 
 - name: Set pleasant password
   tags: [always]
@@ -53,7 +53,7 @@
   when:
     - pleasant_search_term is defined
 
-#Attachments
+# Attachments
 - name: Get attachments
   uri:
     url: "{{ pleasant_host }}/api/{{ pleasant_api_version }}/rest/entries/{{ _pleasant_searchresult.json.Credentials[0].Id }}/attachments"
@@ -73,7 +73,7 @@
   debug:
     verbosity: 2
     msg:
-     - "{{ _pleasant_attachments|default('') }}"
+      - "{{ _pleasant_attachments|default('') }}"
 
 - name: extract attachments
   copy:

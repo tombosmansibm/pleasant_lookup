@@ -10,3 +10,4 @@
 *.pyc
 *.bak
 .vscode
+*.tar.gz
