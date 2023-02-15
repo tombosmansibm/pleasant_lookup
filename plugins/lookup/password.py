@@ -1,17 +1,19 @@
-# (c) 2021, Tom Bosmans tom.bosmans@be.ibm.com
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
+# (c) 2023, Tom Bosmans tom.bosmans@be.ibm.com
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import (absolute_import, division, print_function)
-
 __metaclass__ = type
 
 DOCUMENTATION = """
-name: pleasant
+name: tombosmansibm.pleasant_lookup.password
 author: Tom Bosmans
-version_added: "1.0"
-short_description: lookup passwords in Pleasant Password server.  
-   This is using Python Requests U(https://docs.python-requests.org/en/latest/api/)
+version_added: "1.0.0"
+short_description: lookup passwords in Pleasant Password server.
 description:
     - Returns the content of the URL requested to be used as data in play.
+    - This is using Python Requests https://docs.python-requests.org/en/latest/api/
 options:
   _terms:
     description: Pleasant password server url.  This will be removed in a future version.
@@ -30,7 +32,10 @@ options:
     description: Version of the api.  Only v5 or v6.
     type: string
     default: "v5"
-    choices: ['v5', 'v6', 'v7']
+    choices: 
+      - v5
+      - v6
+      - v7
     vars:
       - name: pleasant_api_version
     env:
@@ -42,7 +47,7 @@ options:
   pleasant_search:
     description: Item name to search
     type: string
-    default: ""
+    default: null
   pleasant_filter_path:
     description: Limit to path.  A path starts with Root/
     type: string
@@ -90,13 +95,15 @@ options:
 EXAMPLES = """
 
 - name: password
-  debug: msg="{{ lookup('tombosmansibm.pleasant_lookup.password', pleasant_host='https://pleasant.com:10001', username='bob', password='hunter2', pleasant_search='itemname') }}"
+  debug: msg="{{ lookup('tombosmansibm.pleasant_lookup.password', pleasant_host='https://pleasant.com:10001',
+                          username='bob', password='hunter2', pleasant_search='itemname') }}"
 
 # lookup example with search parameter and filter on username and path, with reference to the ca bundle of the system.
 - name: Lookup
   run_once: True
   debug:
-    msg: "{{ lookup('tombosmansibm.pleasant_lookup.password', pleasant_host='https://pleasant.com:10001', username='myuser', password='mypassword', pleasant_filter_path='Root/DEV/', 
+    msg: "{{ lookup('tombosmansibm.pleasant_lookup.password', pleasant_host='https://pleasant.com:10001',
+       username='myuser', password='mypassword', pleasant_filter_path='Root/DEV/',
        pleasant_filter_username='root', pleasant_search='root', verify='/etc/ssl/certs/ca-bundle.crt', timeout=2) }}"
   delegate_to: localhost
 
@@ -110,10 +117,10 @@ The result is a list of items:
 """
 
 RETURN = """
-  _list:
-    description: list of password objects: {username, password, path}
-    type: list
-    elements: dict
+_list:
+  description: list of password objects containing username, password, path
+  type: list
+  elements: dict
 """
 
 from ansible.errors import AnsibleError
