@@ -29,6 +29,7 @@ timeout = 15
 * pleasant_filter_path: only return results that begin with this path.  Should always begin with '/Root'
 * verify: set to False to disable SSL verification
 * timeout: defaults to 5
+* pleasant_api_version: defaults to v5.  Other choice is v6.
 
 ## Examples
 

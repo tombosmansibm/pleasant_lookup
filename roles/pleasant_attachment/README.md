@@ -28,6 +28,10 @@ To filter only a specific type of files, you can use the attachment filter (usin
     
     pleasant_attachment_filter: ".*.p12"
 
+To select a different level of api, you can use pleasant_api_version.
+
+    pleasant_api_version: "v5"
+
 Dependencies
 ------------
 
