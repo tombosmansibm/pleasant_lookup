@@ -32,7 +32,7 @@ options:
     description: Version of the api.  Only v5 or v6.
     type: string
     default: "v5"
-    choices: 
+    choices:
       - v5
       - v6
       - v7
@@ -67,9 +67,23 @@ options:
   username:
     description: Username to authenticate to Pleasant
     type: string
+    vars:
+      - name: username
+    env:
+      - name: PLEASANT_USERNAME
+    ini:
+      - section: pleasant_lookup
+        key: username
   password:
     description: Password to authenticate to Pleasant
     type: string
+    vars:
+      - name: password
+    env:
+      - name: PLEASANT_PASSWORD
+    ini:
+      - section: pleasant_lookup
+        key: password
   headers:
     description: HTTP request headers
     type: dictionary
@@ -138,6 +152,8 @@ display = Display()
 class LookupModule(LookupBase):
     def get_token(self, pleasant_host, _pusername, _ppassword):
         verify = self.get_option('verify')
+        if verify in ["false", "False", "FALSE"]:
+            verify = False
         display.vv(f"Verify: {verify}")
         timeout = self.get_option('timeout')
 
@@ -180,6 +196,8 @@ class LookupModule(LookupBase):
         headers = {"Content-type": "application/json", "Authorization": "Bearer " + _at}
         payload = {"Search": pleasant_search}
         verify = self.get_option('verify')
+        if verify in ["false", "False", "FALSE"]:
+            verify = False
         timeout = self.get_option('timeout')
 
         try:
@@ -215,6 +233,8 @@ class LookupModule(LookupBase):
         #  Authorization: "Bearer {{ _pleasant_at.json.access_token }}"
         headers = {"Content-type": "application/json", "Authorization": "Bearer " + _at}
         verify = self.get_option('verify')
+        if verify in ["false", "False", "FALSE"]:
+            verify = False
         timeout = self.get_option('timeout')
         try:
             response = requests.request("GET", urljoin(pleasant_host,
