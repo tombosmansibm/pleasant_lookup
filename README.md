@@ -14,6 +14,10 @@ In ansible.cfg, you can add these global settings:
 [pleasant_lookup]
 ca_path = /etc/ssl/certs/ca-bundle.crt
 timeout = 15
+host = https://pleasant.com:10001
+username = XXXXXX
+password = YYYYYY
+
 ```
 ## Parameters
 ### Required
@@ -54,5 +58,5 @@ The result is a list of items:
      "password": "the password",
      "path": "Root/Path/",
      "username": "the username"
- }] 
+ }]
 ```
