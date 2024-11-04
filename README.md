@@ -4,6 +4,8 @@ Python dependencies
 
 * requests
 
+The latest version is v1.2.0
+
 ```commandline
 ansible-galaxy collection install tombosmansibm.pleasant_lookup
 ```
